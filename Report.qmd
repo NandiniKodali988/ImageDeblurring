@@ -6,6 +6,7 @@ authors:
     affiliation: Georgetown University
 tbl-cap-location: bottom
 bibliography: reference.bib
+embed-resources: true
 nocite: |
   @*
 ---
