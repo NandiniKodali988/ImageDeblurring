@@ -38,11 +38,11 @@ The proposed solution adopts a GAN framework for image deblurring, consisting of
 
 The generator takes a blurred image as input and outputs a deblurred version of the same resolution. Key features of the generator include:
 
-- Reflection Padding: Applied before convolutions to preserve edge information and avoid artifacts introduced by zero-padding.
-- Downsampling Layers: Two convolutional layers with stride 2 are used to progressively reduce the spatial dimensions while increasing the depth of feature maps.
-- Residual Blocks: A sequence of 9 residual blocks allows the network to learn complex transformations while preserving spatial coherence. Each block consists of two convolutional layers, each preceded by reflection padding, followed by batch normalization and ReLU activation.
-- Upsampling Layers: Two stages of nearest-neighbor upsampling are followed by 3x3 convolutions to restore image resolution.
-- Output Layer: A final convolution with tanh activation maps the output to the range [-1,1]. A residual connection is added from the input to the output, and the result is scaled to [-1,1] using a Lambda layer.
+- **Reflection Padding**: Applied before convolutions to preserve edge information and avoid artifacts introduced by zero-padding.
+- **Downsampling Layers**: Two convolutional layers with stride 2 are used to progressively reduce the spatial dimensions while increasing the depth of feature maps.
+- **Residual Blocks**: A sequence of 9 residual blocks allows the network to learn complex transformations while preserving spatial coherence. Each block consists of two convolutional layers, each preceded by reflection padding, followed by batch normalization and ReLU activation.
+- **Upsampling Layers**: Two stages of nearest-neighbor upsampling are followed by 3x3 convolutions to restore image resolution.
+- **Output Layer**: A final convolution with tanh activation maps the output to the range [-1,1]. A residual connection is added from the input to the output, and the result is scaled to [-1,1] using a Lambda layer.
 
 
 ## 3.2. Discriminator
@@ -53,10 +53,10 @@ The discriminator takes either a real sharp image or a deblurred image generated
 
 ## 3.3. Loss Functions
 
-Perceptual Loss: Perceptual loss is designed to capture high-level semantic differences between images, as opposed to pixel-wise losses like MSE which often result in blurry outputs. In this project, the perceptual loss is computed by passing both the generated (deblurred) image and the target sharp image through a pre-trained VGG16 network and extracting feature maps from an intermediate layer (`block3_conv3`). The loss is then calculated as the mean squared error between these feature representations. This encourages the generator to produce outputs that are not only visually sharp but also structurally and semantically similar to the target image, leading to more realistic and perceptually pleasing results.
+**Perceptual Loss**: Perceptual loss is designed to capture high-level semantic differences between images, as opposed to pixel-wise losses like MSE which often result in blurry outputs. In this project, the perceptual loss is computed by passing both the generated (deblurred) image and the target sharp image through a pre-trained VGG16 network and extracting feature maps from an intermediate layer (`block3_conv3`). The loss is then calculated as the mean squared error between these feature representations. This encourages the generator to produce outputs that are not only visually sharp but also structurally and semantically similar to the target image, leading to more realistic and perceptually pleasing results.
 
 
-Wasserstein Loss: Wasserstein loss addresses several shortcomings of the traditional binary cross-entropy loss used in GANs. It provides a continuous and meaningful gradient even when the discriminator performs well, avoiding vanishing gradients. This makes GAN training more stable and improves convergence. In this implementation, the discriminator is trained to output high values for real images and low values for fake (generated) images. The generator aims to generate outputs that are indistinguishable from real images in the eyes of the discriminator. In the context of Wasserstein loss, this translates to minimizing the negative of the discriminator's output for the generated images. As the generator improves, the Wasserstein distance between the distributions of real and fake images reduces, ultimately pushing the generator to produce more realistic and sharper images. This adversarial dynamic helps guide the generator toward creating high-quality deblurred outputs.
+**Wasserstein Loss**: Wasserstein loss addresses several shortcomings of the traditional binary cross-entropy loss used in GANs. It provides a continuous and meaningful gradient even when the discriminator performs well, avoiding vanishing gradients. This makes GAN training more stable and improves convergence. In this implementation, the discriminator is trained to output high values for real images and low values for fake (generated) images. The generator aims to generate outputs that are indistinguishable from real images in the eyes of the discriminator. In the context of Wasserstein loss, this translates to minimizing the negative of the discriminator's output for the generated images. As the generator improves, the Wasserstein distance between the distributions of real and fake images reduces, ultimately pushing the generator to produce more realistic and sharper images. This adversarial dynamic helps guide the generator toward creating high-quality deblurred outputs.
 
 
 # 4. Training
